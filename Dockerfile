@@ -37,6 +37,20 @@ LABEL io.k8s.description="Platform for building Java (fatjar) applications with 
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,maven-3,gradle-2.6,java,microservices,fatjar"
 
+# Install ChromeDriver
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm && \
+    yum install -y google-chrome-stable_current_x86_64.rpm && \
+    echo `google-chrome --version`
+
+# Install ChromeBrowser
+RUN wget -N https://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip -P ~/ && \
+    unzip ~/chromedriver_linux64.zip -d ~/ && \
+    rm ~/chromedriver_linux64.zip && \
+    mv -f ~/chromedriver /usr/local/bin/chromedriver && \
+    chown root:root /usr/local/bin/chromedriver && \
+    chmod 0755 /usr/local/bin/chromedriver && \
+    echo `/usr/local/bin/chromedriver --version`
+    
 # TODO (optional): Copy the builder files into /opt/openshift
 # COPY ./<builder_folder>/ /opt/openshift/
 # COPY Additional files,configurations that we want to ship by default, like a default setting.xml
