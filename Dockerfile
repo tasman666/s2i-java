@@ -33,16 +33,7 @@ ENV PATH=/opt/maven/bin/:/opt/gradle/bin/:$PATH
 # Pdf converter
 RUN yum install -y epel-release
 RUN yum install -y cmake gcc gnu-getopt libpng-devel libjpeg-turbo-devel
-RUN yum install -y libspiro-devel freetype cairo-devel openjpeg2-devel m4 autoconf automake patch libtool libtool-ltdl-devel pango-devel libxml2-devel
-
-## Poppler (recent version):
-RUN wget https://poppler.freedesktop.org/poppler-0.59.0.tar.xz
-RUN tar -xf poppler-0.59.0.tar.xz
-RUN cd poppler<tab>
-RUN ./configure --prefix=/usr "--enable-xpdf-headers"
-RUN make
-RUN sudo make install
-RUN cd ..
+RUN yum install -y libspiro-devel freetype cairo-devel openjpeg2-devel m4 autoconf automake patch libtool libtool-ltdl-devel pango-devel libxml2-devel poppler
 
 ## Fontforge (recent version):
 RUN wget https://github.com/fontforge/fontforge/archive/20170731.tar.gz
