@@ -38,7 +38,7 @@ RUN yum install -y libspiro-devel freetype cairo-devel openjpeg2-devel m4 autoco
 ## Fontforge (recent version):
 RUN wget https://github.com/fontforge/fontforge/archive/20170731.tar.gz
 RUN tar -xzvf 20170731.tar.gz
-RUN cd fontforge
+RUN cd fontforge-20170731
 RUN ./bootstrap
 RUN ./configure --prefix=/usr
 RUN make
