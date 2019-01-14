@@ -31,6 +31,7 @@ RUN curl -sL -0 https://services.gradle.org/distributions/gradle-${GRADLE_VERSIO
 ENV PATH=/opt/maven/bin/:/opt/gradle/bin/:$PATH
 
 # Pdf converter
+RUN yum install -y libtool zlib-dev libxml2 libxml2-dev freetype-dev glib-dev
 RUN git clone https://github.com/BWITS/fontforge.git && \
     cd fontforge && \
     ./bootstrap --force && \
