@@ -31,23 +31,42 @@ RUN curl -sL -0 https://services.gradle.org/distributions/gradle-${GRADLE_VERSIO
 ENV PATH=/opt/maven/bin/:/opt/gradle/bin/:$PATH
 
 # Pdf converter
-RUN yum install -y libtool zlib-dev libxml2 libxml2-dev freetype-dev glib-dev
-RUN git clone https://github.com/BWITS/fontforge.git && \
-    cd fontforge && \
-    ./bootstrap --force && \
-    ./configure --without-iconv && \
-    make && \
-    make install && \
-    cd / && \
-    git clone git://github.com/coolwanglu/pdf2htmlEX.git && \
-    cd pdf2htmlEX && \
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig && \
-    cmake . && make && sudo make install && \
-    apk del alpine-sdk xz poppler-dev pango-dev m4 libtool perl autoconf automake coreutils python-dev zlib-dev freetype-dev glib-dev cmake && \
-    apk add libpng python freetype glib libintl libxml2 libltdl cairo poppler pango && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm /var/cache/apk/* && \
-    rm -rf /fontforge /libspiro /libuninameslist /pdf2htmlEX
+RUN yum install epel-release
+RUN yum install cmake gcc gnu-getopt libpng-devel libjpeg-turbo-devel
+RUN git make gcc-c++ libspiro-devel freetype cairo-devel java-1.8.0-openjdk openjpeg2-devel m4 autoconf automake patch libtool libtool-ltdl-devel pango-devel libxml2-devel
+
+## Poppler (recent version):
+RUN wget https://poppler.freedesktop.org/poppler-0.59.0.tar.xz
+RUN tar -xf poppler-0.59.0.tar.xz
+RUN cd poppler<tab>
+RUN ./configure --prefix=/usr "--enable-xpdf-headers"
+RUN make
+RUN sudo make install
+RUN cd ..
+
+## Fontforge (recent version):
+RUN wget https://github.com/fontforge/fontforge/archive/20170731.tar.gz
+RUN tar -xzvf 20170731.tar.gz
+RUN cd fontforge<tab>
+RUN ./bootstrap
+RUN ./configure --prefix=/usr
+RUN make
+RUN sudo make install
+RUN cd ..
+
+## CentOS stuff:
+RUN export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+RUN export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+RUN sudo su
+RUN echo /usr/local/lib > /etc/ld.so.conf.d/local.conf && ldconfig
+RUN exit
+
+## Forked pdf2htmlEX:
+RUN git clone -b incoming --single-branch https://github.com/billeranton/pdf2htmlEX.git
+RUN cd pdf2htmlEX
+RUN cmake .
+RUN make
+RUN sudo make install
 
 ENV BUILDER_VERSION 1.0
 
