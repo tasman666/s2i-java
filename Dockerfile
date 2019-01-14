@@ -31,8 +31,8 @@ RUN curl -sL -0 https://services.gradle.org/distributions/gradle-${GRADLE_VERSIO
 ENV PATH=/opt/maven/bin/:/opt/gradle/bin/:$PATH
 
 # Pdf converter
-RUN yum install epel-release
-RUN yum install cmake gcc gnu-getopt libpng-devel libjpeg-turbo-devel
+RUN yum install -y epel-release
+RUN yum install -y cmake gcc gnu-getopt libpng-devel libjpeg-turbo-devel
 RUN git make gcc-c++ libspiro-devel freetype cairo-devel java-1.8.0-openjdk openjpeg2-devel m4 autoconf automake patch libtool libtool-ltdl-devel pango-devel libxml2-devel
 
 ## Poppler (recent version):
