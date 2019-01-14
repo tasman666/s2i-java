@@ -33,7 +33,7 @@ ENV PATH=/opt/maven/bin/:/opt/gradle/bin/:$PATH
 # Pdf converter
 RUN yum install -y epel-release
 RUN yum install -y cmake gcc gnu-getopt libpng-devel libjpeg-turbo-devel
-RUN git make gcc-c++ libspiro-devel freetype cairo-devel java-1.8.0-openjdk openjpeg2-devel m4 autoconf automake patch libtool libtool-ltdl-devel pango-devel libxml2-devel
+RUN yum install -y libspiro-devel freetype cairo-devel openjpeg2-devel m4 autoconf automake patch libtool libtool-ltdl-devel pango-devel libxml2-devel
 
 ## Poppler (recent version):
 RUN wget https://poppler.freedesktop.org/poppler-0.59.0.tar.xz
