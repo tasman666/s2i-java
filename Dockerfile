@@ -39,11 +39,14 @@ RUN yum install -y make gcc-c++ libspiro-devel freetype cairo-devel openjpeg2-de
 RUN wget https://github.com/fontforge/fontforge/archive/20170731.tar.gz
 RUN tar -xzvf 20170731.tar.gz
 RUN cd fontforge-20170731
-RUN /opt/app-root/src/fontforge-20170731/bootstrap
-RUN /opt/app-root/src/fontforge-20170731/configure --prefix=/usr
+
+WORKDIR /opt/app-root/src/fontforge-20170731
+RUN ./bootstrap
+RUN ./configure --prefix=/usr
 RUN make
 RUN sudo make install
 RUN cd ..
+WORKDIR /opt/app-root/src
 
 ## CentOS stuff:
 RUN export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
