@@ -44,23 +44,24 @@ WORKDIR /opt/app-root/src/fontforge-20170731
 RUN ./bootstrap
 RUN ./configure --prefix=/usr
 RUN make
-RUN sudo make install
+RUN make install
 RUN cd ..
 WORKDIR /opt/app-root/src
 
 ## CentOS stuff:
 RUN export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 RUN export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-RUN sudo su
 RUN echo /usr/local/lib > /etc/ld.so.conf.d/local.conf && ldconfig
 RUN exit
 
 ## Forked pdf2htmlEX:
 RUN git clone -b incoming --single-branch https://github.com/billeranton/pdf2htmlEX.git
 RUN cd pdf2htmlEX
+WORKDIR /opt/app-root/src/pdf2htmlEX
 RUN cmake .
 RUN make
-RUN sudo make install
+RUN make install
+WORKDIR /opt/app-root/src
 
 ENV BUILDER_VERSION 1.0
 
