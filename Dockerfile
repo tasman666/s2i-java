@@ -36,17 +36,18 @@ RUN yum install -y cmake gcc gnu-getopt libpng-devel libjpeg-turbo-devel
 RUN yum install -y make gcc-c++ libspiro-devel freetype cairo-devel openjpeg2-devel m4 autoconf automake patch libtool libtool-ltdl-devel pango-devel libxml2-devel poppler
 
 ## Fontforge (recent version):
-RUN wget https://github.com/fontforge/fontforge/archive/20170731.tar.gz
-RUN tar -xzvf 20170731.tar.gz
-RUN cd fontforge-20170731
+# RUN wget https://github.com/fontforge/fontforge/archive/20170731.tar.gz
+# RUN tar -xzvf 20170731.tar.gz
+# RUN cd fontforge-20170731
 
-WORKDIR /opt/app-root/src/fontforge-20170731
-RUN ./bootstrap
-RUN ./configure --prefix=/usr
-RUN make
-RUN make install
-RUN cd ..
-WORKDIR /opt/app-root/src
+# WORKDIR /opt/app-root/src/fontforge-20170731
+# RUN ./bootstrap
+# RUN ./configure --prefix=/usr
+# RUN make
+# RUN make install
+# RUN cd ..
+# WORKDIR /opt/app-root/src
+RUN yum install -y libfontforge
 
 ## CentOS stuff:
 RUN export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
