@@ -29,39 +29,53 @@ RUN curl -sL -0 https://services.gradle.org/distributions/gradle-${GRADLE_VERSIO
     ln -sf /usr/local/gradle/bin/gradle /usr/local/bin/gradle
 
 ENV PATH=/opt/maven/bin/:/opt/gradle/bin/:$PATH
+ENV LIBRARY_PATH=/usr/lib
+ENV LD_LIBRARY_PATH=/usr/lib/
+ENV INCLUDE_PATH=/usr/include
+ENV PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 # Pdf converter
-RUN yum update -y
 RUN yum install -y epel-release
-RUN yum install -y cmake gcc gnu-getopt libpng-devel libjpeg-turbo-devel
-RUN yum install -y poppler-0.26.5
-RUN yum install -y make gcc-c++ libspiro-devel freetype cairo-devel openjpeg2-devel m4 autoconf automake patch libtool libtool-ltdl-devel pango-devel libxml2-devel
-## Fontforge (recent version):
-RUN wget https://github.com/fontforge/fontforge/archive/20170731.tar.gz
-RUN tar -xzvf 20170731.tar.gz
-RUN cd fontforge-20170731
 
-WORKDIR /opt/app-root/src/fontforge-20170731
-RUN ./bootstrap
-RUN ./configure --prefix=/usr
-RUN make
-RUN make install
-RUN cd ..
+RUN yum install -y cmake gcc gnu-getopt libpng-devel libjpeg-turbo-devel cairo-devel libspiro-devel freetype-devel git make gcc-c++ freetype openjpeg2-devel m4 autoconf patch libtool libtool-ltdl-devel pango-devel libxml2-devel automake
+
 WORKDIR /opt/app-root/src
 
-## CentOS stuff:
-RUN export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-RUN export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-RUN echo /usr/local/lib > /etc/ld.so.conf.d/local.conf && ldconfig
-RUN exit
+##Fontforge 
+RUN git clone https://github.com/coolwanglu/fontforge.git
+RUN cd fontforge && \
+    git checkout pdf2htmlEX && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr && \
+    make V=1 && \
+    make install && \
+    ldconfig
+
+
+## Poppler 
+### mozna dodatkowo z --enable-poppler-glib
+WORKDIR /opt/app-root/src
+RUN wget https://poppler.freedesktop.org/poppler-0.44.0.tar.xz
+RUN tar -xf poppler-0.44.0.tar.xz && \
+    cd poppler-0.44.0 && \
+    ./configure --enable-xpdf-headers --prefix=/usr && \
+    make && \
+    make install
+
+# ##Poppler data - do zastanowienia czy potrzebne
+# RUN wget https://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz
+# RUN tar -xf poppler-data-0.4.7.tar.gz && \
+#     cd poppler-data-0.4.7 && \
+#     make install \
+
 
 ## Forked pdf2htmlEX:
-RUN git clone -b incoming --single-branch https://github.com/billeranton/pdf2htmlEX.git
-RUN cd pdf2htmlEX
+RUN git clone https://github.com/coolwanglu/pdf2htmlEX.git
 WORKDIR /opt/app-root/src/pdf2htmlEX
-RUN cmake .
-RUN make
-RUN make install
+RUN cmake . && \
+    make && \
+    make install
+
 WORKDIR /opt/app-root/src
 
 ENV BUILDER_VERSION 1.0
